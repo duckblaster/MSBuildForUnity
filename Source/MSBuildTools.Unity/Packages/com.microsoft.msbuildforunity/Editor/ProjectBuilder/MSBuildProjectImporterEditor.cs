@@ -1,5 +1,5 @@
 ﻿using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace Microsoft.Build.Unity
@@ -7,7 +7,7 @@ namespace Microsoft.Build.Unity
     partial class MSBuildProjectImporter
     {
         [CustomEditor(typeof(MSBuildProjectImporter))]
-        private sealed class MSBuildProjectImporterEditor : ScriptedImporterEditor
+        private sealed class MSBuildProjectImporterEditor : UnityEditor.AssetImporters.ScriptedImporterEditor
         {
             public override void OnInspectorGUI()
             {

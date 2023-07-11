@@ -213,6 +213,11 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                 exporter.SourceExcludePaths.Add(nestedAsmDef.Directory);
             }
 
+            foreach (DirectoryInfo subDirectory in exporter.SourceIncludePath.EnumerateDirectories("*~", SearchOption.AllDirectories))
+            {
+                exporter.SourceExcludePaths.Add(subDirectory);
+            }
+
             // Set all of the references
             ProcessDepedencies(exporter.PluginReferences, PluginDependencies, exporter.AssemblySearchPaths, (i, c) => new PluginReference(i.Name, i.ReferencePath, c), i => i.ReferencePath.LocalPath);
             ProcessDepedencies(exporter.PluginReferences, WinMDDependencies, exporter.AssemblySearchPaths, (i, c) => new PluginReference(i.Name, i.ReferencePath, c), i => i.ReferencePath.LocalPath);

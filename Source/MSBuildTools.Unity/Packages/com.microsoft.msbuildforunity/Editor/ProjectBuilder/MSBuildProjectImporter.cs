@@ -2,13 +2,13 @@
 using System.IO;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace Microsoft.Build.Unity
 {
-    [ScriptedImporter(1, new[] { "csproj", "sln" })]
-    internal sealed partial class MSBuildProjectImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(1, new[] { "csproj", "sln" })]
+    internal sealed partial class MSBuildProjectImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         [SerializeField]
         [Tooltip("The MSBuild build engine to use to build the project.")]
@@ -18,7 +18,7 @@ namespace Microsoft.Build.Unity
         [Tooltip("Named profiles to configure different build options.")]
         private MSBuildBuildProfile[] profiles = null;
 
-        public override void OnImportAsset(AssetImportContext context)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext context)
         {
             var msBuildProjectReference = MSBuildProjectReference.FromMSBuildProject(context.assetPath, this.buildEngine, true, this.profiles);
 

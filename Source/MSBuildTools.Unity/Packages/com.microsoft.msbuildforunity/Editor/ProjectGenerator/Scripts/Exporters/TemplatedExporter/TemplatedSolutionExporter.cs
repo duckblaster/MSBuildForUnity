@@ -237,7 +237,11 @@ namespace Microsoft.Build.Unity.ProjectGeneration.Exporters.TemplatedExporter
 
             foreach (ConfigurationPlatformPair configPlatform in ConfigurationPlatforms)
             {
-                ProjectConfigurationPlatformMapping mapping = project.ConfigurationPlatformMapping[configPlatform];
+                if(!project.ConfigurationPlatformMapping.TryGetValue(configPlatform, out ProjectConfigurationPlatformMapping mapping))
+                {
+                    Debug.Log($"Unknown ConfigurationPlatfromMapping: '{configPlatform.Configuration}', '{configPlatform.Platform}'");
+                    continue;
+                }
 
                 WriteConfigurationProperty(solutionWriter, projectGuid, configPlatform, "ActiveCfg", mapping.ConfigurationPlatform);
                 if (mapping.EnabledForBuild)

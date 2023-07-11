@@ -32,7 +32,8 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             {
                 buildTarget = platform.BuildTarget,
                 buildTargetGroup = BuildPipeline.GetBuildTargetGroup(platform.BuildTarget),
-                flags = AssemblyBuilderFlags.None
+                flags = AssemblyBuilderFlags.None,
+                referencesOptions = ReferencesOptions.UseEngineModules
             };
 
             HashSet<string> platformCommonDefines = new HashSet<string>(builder.defaultDefines);
@@ -67,8 +68,8 @@ namespace Microsoft.Build.Unity.ProjectGeneration
         /// <returns>The editor <see cref="CompilationPlatformInfo"/>.</returns>
         public static CompilationPlatformInfo GetEditorPlatform()
         {
-            ApiCompatibilityLevel cached = PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.Unknown);
-            PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Unknown, ApiCompatibilityLevel.NET_4_6);
+            //ApiCompatibilityLevel cached = PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.Unknown);
+            //PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Unknown, ApiCompatibilityLevel.NET_4_6);
 
             try
             {
@@ -76,7 +77,8 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                 {
                     buildTarget = BuildTarget.NoTarget,
                     buildTargetGroup = BuildTargetGroup.Unknown,
-                    flags = AssemblyBuilderFlags.EditorAssembly
+                    flags = AssemblyBuilderFlags.EditorAssembly,
+                    referencesOptions = ReferencesOptions.UseEngineModules
                 };
 
                 return new CompilationPlatformInfo("Editor", BuildTarget.NoTarget,
@@ -85,7 +87,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             }
             finally
             {
-                PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Unknown, cached);
+                //PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Unknown, cached);
             }
         }
 

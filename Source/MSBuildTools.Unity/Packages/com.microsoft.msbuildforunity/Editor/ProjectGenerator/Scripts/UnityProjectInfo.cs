@@ -156,7 +156,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
 
             scanMap.Add(".csproj", (path, guid) =>
             {
-                if (!path.EndsWith(".msb4u.csproj"))
+                if (!path.EndsWith(".msb4u.csproj") && !Directory.GetFiles(Path.GetDirectoryName(path), "*.asmdef").Any())
                 {
                     existingCSProjectFiles.Add(path);
                 }
@@ -209,6 +209,11 @@ namespace Microsoft.Build.Unity.ProjectGeneration
 
                 foreach (FileInfo fileInfo in asmDefFiles)
                 {
+                    if (fileInfo.FullName.Contains("~\\"))
+                    {
+                        continue;
+                    }
+
                     AssemblyDefinitionInfo assemblyDefinitionInfo = AssemblyDefinitionInfo.Parse(fileInfo, this, null, true);
                     asmDefDirectoriesSorted.Add(assemblyDefinitionInfo);
                     asmDefInfoMap.Add(Path.GetFileNameWithoutExtension(fileInfo.Name), assemblyDefinitionInfo);

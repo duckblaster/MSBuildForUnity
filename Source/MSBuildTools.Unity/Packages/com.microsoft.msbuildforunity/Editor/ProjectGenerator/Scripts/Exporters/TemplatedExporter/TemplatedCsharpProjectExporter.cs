@@ -156,7 +156,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration.Exporters.TemplatedExporter
             if (IsGenerated)
             {
                 new TemplatedWriter(primaryTemplateFile).Export(primaryExportPath);
-                File.SetAttributes(primaryExportPath.FullName, FileAttributes.ReadOnly);
+                //File.SetAttributes(primaryExportPath.FullName, FileAttributes.ReadOnly);
             }
             else if (!File.Exists(primaryExportPath.FullName))
             {

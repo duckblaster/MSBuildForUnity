@@ -62,6 +62,10 @@ namespace Microsoft.Build.Unity
             {
                 msBuildProjectReference.profiles = null;
             }
+            else if (Directory.GetFiles(Path.GetDirectoryName(assetRelativePath), "*.asmdef").Any())
+            {
+                msBuildProjectReference.profiles = null;
+            }
 
             return msBuildProjectReference;
         }

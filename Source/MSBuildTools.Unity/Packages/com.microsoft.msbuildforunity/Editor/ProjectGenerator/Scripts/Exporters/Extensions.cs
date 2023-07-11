@@ -20,11 +20,25 @@ namespace Microsoft.Build.Unity.ProjectGeneration.Exporters
         /// <param name="isGenerated">Whether the project is generated.</param>
         public static void AddProject(this ISolutionExporter exporter, SolutionProject project, bool isGenerated = false)
         {
-            exporter.Projects.Add(project.Guid, project);
+            if (exporter.Projects.ContainsKey(project.Guid))
+            {
+                UnityEngine.Debug.LogWarning($"Project {project.Name} ({project.Guid}) already exists in the solution. Skipping.");
+            }
+            else
+            {
+                exporter.Projects.Add(project.Guid, project);
+            }
 
             if (isGenerated)
             {
-                exporter.GeneratedItems.Add(project.Guid);
+                if (exporter.GeneratedItems.Contains(project.Guid))
+                {
+                    UnityEngine.Debug.LogWarning($"Project {project.Name} ({project.Guid}) already exists in the solution. Skipping.");
+                }
+                else
+                {
+                    exporter.GeneratedItems.Add(project.Guid);
+                }
             }
         }
 

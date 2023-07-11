@@ -101,7 +101,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             { BuildTarget.WSAPlayer, "WindowsStoreApps" }
         };
 
-        public const string CSharpVersion = "7.3";
+        public const string CSharpVersion = "latest";
         public const string FullGeneration = "MSBuild/Full Generation Enabled";
 
         // On master branches this version must be incremented by 1 as to what is specified in the package.json.
