@@ -69,6 +69,10 @@ namespace Microsoft.Build.Unity.ProjectGeneration.Exporters
         /// </summary>
         HashSet<string> AssemblySearchPaths { get; }
 
+        HashSet<string> Analyzers { get; }
+        string AnalyzerConfig { get; set; }
+        HashSet<string> AdditionalFiles { get; }
+
         /// <summary>
         /// Gets or sets the plugin references (DLLs, WinMDs)
         /// </summary>

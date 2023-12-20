@@ -73,6 +73,41 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             }
         }
 
+        private void GetEnabledPlatforms(Dictionary<string, bool> enabledPlatforms)
+        {
+            var importer = Utilities.GetAssetImporter(ReferencePath.LocalPath);
+            var plugin = importer as PluginImporter;
+            if(plugin == null)
+            {
+                Debug.LogError($"PluginImporter not found for {ReferencePath}");
+                return;
+            }
+            if (plugin.GetCompatibleWithAnyPlatform())
+            {
+                SetAllPlatformsEnabled(enabledPlatforms);
+
+                foreach (var platform in enabledPlatforms.Keys.ToArray())
+                {
+                    if (platform == EditorPlatformName && plugin.GetExcludeEditorFromAnyPlatform())
+                    {
+                        enabledPlatforms.Remove(EditorPlatformName);
+                    }
+                    else if (plugin.GetExcludeFromAnyPlatform(platform))
+                    {
+                        enabledPlatforms.Remove(platform);
+                    }
+                }
+            }
+            else
+            {
+                foreach (CompilationPlatformInfo platform in UnityProjectInfo.AvailablePlatforms)
+                {
+                    enabledPlatforms.Add(MSBuildTools.SupportedBuildTargets[platform.BuildTarget], plugin.GetCompatibleWithPlatform(platform.Name));
+                }
+                enabledPlatforms.Add(EditorPlatformName, plugin.GetCompatibleWithEditor());
+            }
+        }
+
         private void ParseYAMLFile()
         {
             // This approach doesn't work for native YAML parsing
@@ -143,7 +178,8 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                     reader.ReadUntil("platformData:");
                 }
 
-                ParsePlatformData(reader, enabledPlatforms);
+                //ParsePlatformData(reader, enabledPlatforms);
+                GetEnabledPlatforms(enabledPlatforms);
             }
 
             Dictionary<BuildTarget, CompilationPlatformInfo> inEditorPlatforms = new Dictionary<BuildTarget, CompilationPlatformInfo>();
@@ -225,10 +261,13 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             }
             // else fall through to use -first method 
 
-            string line;
-            while ((line = reader.ReadUntil("first:", "userData:")).Contains("first:") && !reader.EndOfStream)
+            do
             {
-                string[] platformLineParts = reader.ReadLine().Split(':');
+                if (nextLine.Contains("first:"))
+                {
+                    nextLine = reader.ReadLine();
+                }
+                string[] platformLineParts = nextLine.Split(':');
                 string platform = platformLineParts[1].Trim();
 
                 if (platformLineParts[0].Contains("Facebook"))
@@ -245,14 +284,13 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                     {
                         // All platforms are indeed enabled
                         SetAllPlatformsEnabled(enabledPlatforms);
-                        return;
-                    }
-                    else
-                    {
-                        enabledPlatforms.Add(platform, isEnabled);
+                        //return;
                     }
                 }
+                enabledPlatforms[platform] = isEnabled;
+                nextLine = reader.ReadUntil("first:", "userData:");
             }
+            while (nextLine.Contains("first:") && !reader.EndOfStream);
         }
 
         private void SetAllPlatformsEnabled(Dictionary<string, bool> enabledPlatforms)
@@ -326,7 +364,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                 }
                 else
                 {
-                    Debug.LogError($"Platform '{platformName}' was specified as enabled by '{ReferencePath.LocalPath}' plugin, but not available in processed compilation settings.");
+                    Debug.LogWarning($"Platform '{platformName}' was specified as enabled by '{ReferencePath.LocalPath}' plugin, but not available in processed compilation settings.");
                 }
             }
         }

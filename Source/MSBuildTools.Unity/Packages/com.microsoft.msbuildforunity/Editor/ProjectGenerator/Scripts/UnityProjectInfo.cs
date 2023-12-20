@@ -213,7 +213,6 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                     {
                         continue;
                     }
-
                     AssemblyDefinitionInfo assemblyDefinitionInfo = AssemblyDefinitionInfo.Parse(fileInfo, this, null, true);
                     asmDefDirectoriesSorted.Add(assemblyDefinitionInfo);
                     asmDefInfoMap.Add(Path.GetFileNameWithoutExtension(fileInfo.Name), assemblyDefinitionInfo);

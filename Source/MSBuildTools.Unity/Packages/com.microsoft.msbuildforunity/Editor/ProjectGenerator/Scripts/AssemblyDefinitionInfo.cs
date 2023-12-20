@@ -145,6 +145,10 @@ namespace Microsoft.Build.Unity.ProjectGeneration
         /// </summary>
         public string[] References => references ?? (references = Array.Empty<string>());
 
+        public string[] Analyzers => assembly?.compilerOptions?.RoslynAnalyzerDllPaths ?? Array.Empty<string>();
+        public string AnalyzerConfig => assembly?.compilerOptions?.RoslynAnalyzerRulesetPath;
+        public string[] AdditionalFiles => assembly?.compilerOptions?.RoslynAdditionalFilePaths ?? Array.Empty<string>();
+
         /// <summary>
         /// Gets DLL references for this assembly definition.
         /// </summary>
@@ -229,7 +233,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
 
         private void SearchForSourceFiles(List<SourceFileInfo> sourceFiles, DirectoryInfo directory)
         {
-            if (directory.GetFiles("*.asmdef", SearchOption.TopDirectoryOnly).Length > 1)
+            if (directory.GetFiles("*.asmdef", SearchOption.TopDirectoryOnly).Length > 1 || directory.GetFiles("*.asmref", SearchOption.TopDirectoryOnly).Length > 1)
             {
                 // Source file is managed by another asmdef
                 return;

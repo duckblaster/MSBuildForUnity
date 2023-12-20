@@ -207,6 +207,17 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             exporter.IsEditorOnlyProject = ProjectType == ProjectType.EditorAsmDef || ProjectType == ProjectType.PredefinedEditorAssembly;
             exporter.ProjectName = Name;
             exporter.SourceIncludePath = AssemblyDefinitionInfo.Directory;
+            exporter.AnalyzerConfig = AssemblyDefinitionInfo.AnalyzerConfig;
+
+            foreach (string analyzer in AssemblyDefinitionInfo.Analyzers)
+            {
+                exporter.Analyzers.Add(analyzer);
+            }
+
+            foreach (string file in AssemblyDefinitionInfo.AdditionalFiles)
+            {
+                exporter.AdditionalFiles.Add(file);
+            }
 
             foreach (AssemblyDefinitionInfo nestedAsmDef in AssemblyDefinitionInfo.NestedAssemblyDefinitionFiles)
             {

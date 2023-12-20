@@ -131,6 +131,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--ANALYZERS_TEMPLATE_START-->
+    <Analyzer Include="##ANALYZERS_PATH_TOKEN##" />
+    <!--ANALYZERS_TEMPLATE_END-->
+    
+    <!--ADDITIONAL_FILES_TEMPLATE_START-->
+    <AdditionalFiles Include="##ADDITIONAL_FILE_PATH_TOKEN##" />
+    <!--ADDITIONAL_FILES_TEMPLATE_END-->
+    
+    <!--ANALYZER_CONFIG_FILES_TEMPLATE_START-->
+    <EditorConfigFiles Include="##ANALYZER_CONFIG_FILE_PATH_TOKEN##" />
+    <!--ANALYZER_CONFIG_FILES_TEMPLATE_END-->
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="##PROJECT_DIRECTORY_PATH_TOKEN##\**\*.cs" Exclude="@(FoldersToExclude->'%(identity)\**\*.cs')" />
   </ItemGroup>
 </Project>

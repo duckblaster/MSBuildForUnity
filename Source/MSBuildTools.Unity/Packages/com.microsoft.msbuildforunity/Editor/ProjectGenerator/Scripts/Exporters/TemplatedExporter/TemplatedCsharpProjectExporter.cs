@@ -28,6 +28,15 @@ namespace Microsoft.Build.Unity.ProjectGeneration.Exporters.TemplatedExporter
         private const string SourceExcludeTemplate = "SOURCE_EXCLUDE";
         private const string SourceExcludeTemplate_ExcludePathToken = "EXCLUDE_DIRECTORY_PATH";
 
+        private const string AnalyzersTemplate = "ANALYZERS";
+        private const string AnalyzersTemplate_AnalyzerPathToken = "ANALYZERS_PATH";
+
+        private const string AdditionalFilesTemplate = "ADDITIONAL_FILES";
+        private const string AdditionalFilesTemplate_AditionalFileToken = "ADDITIONAL_FILE_PATH";
+
+        private const string AnalyzerConfigsTemplate = "ANALYZER_CONFIG_FILES";
+        private const string AnalyzerConfigsTemplate_AnalyzerConfigFileToken = "ANALYZER_CONFIG_FILE_PATH";
+
         private const string ProjectReferenceTemplateSet = "PROJECT_REFERENCE_SET";
         private const string PluginReferenceTemplateSet = "PLUGIN_REFERENCE_SET";
         private const string ReferenceTemplateSet_ConfigurationToken = "REFERENCE_CONFIGURATION";
@@ -75,6 +84,10 @@ namespace Microsoft.Build.Unity.ProjectGeneration.Exporters.TemplatedExporter
 
         public HashSet<string> AssemblySearchPaths { get; } = new HashSet<string>();
 
+        public HashSet<string> Analyzers { get; } = new HashSet<string>();
+        public string AnalyzerConfig { get; set; }
+        public HashSet<string> AdditionalFiles { get; } = new HashSet<string>();
+
         public Dictionary<UnityConfigurationType, HashSet<PluginReference>> PluginReferences { get; } = new Dictionary<UnityConfigurationType, HashSet<PluginReference>>();
 
         public Dictionary<UnityConfigurationType, HashSet<ProjectReference>> ProjectReferences { get; } = new Dictionary<UnityConfigurationType, HashSet<ProjectReference>>();
@@ -105,6 +118,25 @@ namespace Microsoft.Build.Unity.ProjectGeneration.Exporters.TemplatedExporter
                 .Write(SupportedPlatformsToken, SupportedPlatforms)
                 .Write(AssemblySearchPathsToken, AssemblySearchPaths)
                 .Write(SourceIncludePathToken, SourceIncludePath.FullName);
+
+            foreach (string analyzer in Analyzers)
+            {
+                propsWriter.CreateWriterFor(AnalyzersTemplate)
+                    .Write(AnalyzersTemplate_AnalyzerPathToken, Utilities.GetNormalizedPath(analyzer, true));
+            }
+
+            if (!string.IsNullOrEmpty(AnalyzerConfig))
+            {
+                propsWriter.CreateWriterFor(AnalyzerConfigsTemplate)
+                    .Write(AnalyzerConfigsTemplate_AnalyzerConfigFileToken, Utilities.GetNormalizedPath(AnalyzerConfig, true));
+            }
+
+
+            foreach (string file in AdditionalFiles)
+            {
+                propsWriter.CreateWriterFor(AdditionalFilesTemplate)
+                    .Write(AdditionalFilesTemplate_AditionalFileToken, Utilities.GetNormalizedPath(file, true));
+            }
 
             foreach (DirectoryInfo excludePath in SourceExcludePaths)
             {

@@ -118,7 +118,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             return GetAssetImporter(path) != null;
         }
 
-        private static AssetImporter GetAssetImporter(string path)
+        public static AssetImporter GetAssetImporter(string path)
         {
             path = Path.GetFullPath(path);
 
