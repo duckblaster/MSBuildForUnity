@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Compilation;
 
 namespace Microsoft.Build.Unity.ProjectGeneration
@@ -28,7 +29,9 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                 throw new ArgumentException(nameof(platform), "Provided an editor platform, use GetEditorPlatform.");
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             AssemblyBuilder builder = new AssemblyBuilder("dummy.dll", new string[] { @"Editor\dummy.cs" })
+#pragma warning restore CS0618 // Type or member is obsolete
             {
                 buildTarget = platform.BuildTarget,
                 buildTargetGroup = BuildPipeline.GetBuildTargetGroup(platform.BuildTarget),
@@ -73,8 +76,10 @@ namespace Microsoft.Build.Unity.ProjectGeneration
 
             try
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 AssemblyBuilder builder = new AssemblyBuilder("editor.dll", new string[] { @"Editor\dummy.cs" })
-                {
+ #pragma warning restore CS0618 // Type or member is obsolete
+               {
                     buildTarget = BuildTarget.NoTarget,
                     buildTargetGroup = BuildTargetGroup.Unknown,
                     flags = AssemblyBuilderFlags.EditorAssembly,
@@ -113,6 +118,11 @@ namespace Microsoft.Build.Unity.ProjectGeneration
         /// The <see cref="BuildTargetGroup"/> this compilation platform represents.
         /// </summary>
         public BuildTargetGroup BuildTargetGroup { get; }
+
+        /// <summary>
+        /// The <see cref="NamedBuildTarget"/> this compilation platform represents.
+        /// </summary>
+        public NamedBuildTarget NamedBuildTarget { get; }
 
         /// <summary>
         /// The <see cref="TargetFramework"/> of this compilation platform.
@@ -161,9 +171,10 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             Name = name;
             BuildTarget = buildTarget;
             BuildTargetGroup = BuildPipeline.GetBuildTargetGroup(BuildTarget);
+            NamedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(BuildTargetGroup);
 
-            TargetFramework = BuildTargetGroup.GetTargetFramework();
-            ScriptingBackend = BuildTargetGroup.GetScriptingBackend();
+            TargetFramework = NamedBuildTarget.GetTargetFramework();
+            ScriptingBackend = NamedBuildTarget.GetScriptingBackend();
 
             CommonPlatformDefines = commonPlatformDefines;
             AdditionalPlayerDefines = additionalPlayerDefines;

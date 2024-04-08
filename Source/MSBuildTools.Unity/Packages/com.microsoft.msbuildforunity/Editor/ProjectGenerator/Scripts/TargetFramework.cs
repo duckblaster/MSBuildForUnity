@@ -4,6 +4,7 @@
 #if UNITY_EDITOR
 using System;
 using UnityEditor;
+using UnityEditor.Build;
 
 namespace Microsoft.Build.Unity.ProjectGeneration
 {
@@ -84,9 +85,9 @@ namespace Microsoft.Build.Unity.ProjectGeneration
         /// </summary>
         /// <param name="this">The <see cref="BuildTargetGroup"/> to get <see cref="TargetFramework"/> for.</param>
         /// <returns>The <see cref="TargetFramework"/> configured for given <see cref="BuildTargetGroup"/>.</returns>
-        public static TargetFramework GetTargetFramework(this BuildTargetGroup @this)
+        public static TargetFramework GetTargetFramework(this NamedBuildTarget @this)
         {
-            if (@this == BuildTargetGroup.Unknown)
+            if (@this == NamedBuildTarget.Unknown)
             {
                 // This may be different on older unity versions
                 return TargetFramework.Net46;
@@ -126,9 +127,9 @@ namespace Microsoft.Build.Unity.ProjectGeneration
         /// </summary>
         /// <param name="this">The <see cref="BuildTargetGroup"/> to get <see cref="ScriptingBackend"/> for.</param>
         /// <returns>The <see cref="ScriptingBackend"/> configured for given <see cref="BuildTargetGroup"/>.</returns>
-        public static ScriptingBackend GetScriptingBackend(this BuildTargetGroup @this)
+        public static ScriptingBackend GetScriptingBackend(this NamedBuildTarget @this)
         {
-            if (@this == BuildTargetGroup.Unknown)
+            if (@this == NamedBuildTarget.Unknown)
             {
                 // This may be different on older unity versions
                 return ScriptingBackend.Mono;

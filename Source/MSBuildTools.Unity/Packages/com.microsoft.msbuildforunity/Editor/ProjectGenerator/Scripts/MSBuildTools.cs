@@ -200,7 +200,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             // - Build if the clean was done
 
             BuildTarget currentBuildTarget = EditorUserBuildSettings.activeBuildTarget;
-            ApiCompatibilityLevel targetFramework = PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup);
+            ApiCompatibilityLevel targetFramework = PlayerSettings.GetApiCompatibilityLevel(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup));
 
             bool buildTargetOrFrameworkChanged = EditorPrefs.GetInt($"{nameof(MSBuildTools)}.{nameof(currentBuildTarget)}") != (int)currentBuildTarget
                 || EditorPrefs.GetInt($"{nameof(MSBuildTools)}.{nameof(targetFramework)}") != (int)targetFramework
